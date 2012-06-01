@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="application/build" path="application/src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="itseclarge-lab1/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="testbench/build" path="testbench/src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="itseclarge-lab1/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="lib/org.json.jar"/>
+	<classpathentry kind="lib" path="lib/org.restlet.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.commons.io.jar"/>
+	<classpathentry kind="lib" path="lib/org.restlet.ext.ssl.jar"/>
+	<classpathentry kind="lib" path="lib/org.jsslutils.jar"/>
+	<classpathentry kind="lib" path="lib/com.sun.grizzly.jar"/>
+	<classpathentry kind="lib" path="lib/com.sun.grizzly.util.jar"/>
+	<classpathentry kind="lib" path="lib/org.restlet.ext.grizzly.jar"/>
+	<classpathentry kind="lib" path="lib/javax.ws.rs.jar"/>
+	<classpathentry kind="lib" path="lib/org.restlet.ext.jaxrs.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

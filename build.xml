@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ITSecLargeLab1" default="all" basedir="">
+
+    <description></description>
+
+    <target name="init" description="Initialize environment">
+        <property name="path.app.src" value="application/src"/>
+        <property name="path.test.src" value="testbench/src"/>
+        <property name="path.app.build" value="application/build"/>
+        <property name="path.test.build" value="testbench/build"/>
+        <property name="path.lib" value="lib"/>
+
+        <path id="classpath">
+            <fileset dir="${path.lib}">
+                <include name="*.jar"/>
+            </fileset>
+        </path>
+        
+        <path id="classpath.runtime">
+            <fileset dir="${path.lib}">
+                <include name="*.jar"/>
+            </fileset>
+            <dirset dir="${path.app.build}"/>
+            <dirset dir="${path.test.build}"/>
+        </path>
+
+    </target>
+
+    <target name="mkdirs" description="Creates all project directories" depends="init">
+			<mkdir dir="${path.app.build}"/>
+			<mkdir dir="${path.test.build}"/>
+    </target>
+    
+    <target name="run_app" depends="init, build">
+    	<java classname="at.ac.tuwien.esse.itseclarge.lab1.CardServer" fork="false" classpathref="classpath.runtime" />
+    </target>
+    
+    <target name="run_test" depends="init, build">
+
+    </target>
+    
+    <target name="build" depends="init, mkdirs">
+    	<javac destdir="${path.app.build}" srcdir="${path.app.src}" includeantruntime="false">
+    		<classpath refid="classpath"/>
+    	</javac>
+    	<javac destdir="${path.test.build}" srcdir="${path.test.src}" includeantruntime="false">
+    		<classpath refid="classpath.runtime"/>
+    	</javac>    
+    </target>
+    
+    <target name="clean" depends="init">
+    	<delete dir="${path.app.build}"/>
+    	<delete dir="${path.test.build}"/>
+    </target>
+</project>
