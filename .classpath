@@ -21,5 +21,5 @@
 	<classpathentry kind="lib" path="lib/org.restlet.ext.grizzly.jar"/>
 	<classpathentry kind="lib" path="lib/javax.ws.rs.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.ext.jaxrs.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="application/build"/>
 </classpath>
