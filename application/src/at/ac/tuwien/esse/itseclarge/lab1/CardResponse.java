@@ -13,8 +13,8 @@ public class CardResponse {
 	public static Response create(String json) {
 		return Response.ok(CardResponse.createJSON(json)).build();
 	}
-	
-	private static JSONObject createJSON(String json) {
+
+	protected static JSONObject createJSON(String json) {
 		try {
 			return new JSONObject(json);
 		} catch (JSONException e) {

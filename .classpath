@@ -16,10 +16,14 @@
 	<classpathentry kind="lib" path="lib/org.apache.commons.io.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.ext.ssl.jar"/>
 	<classpathentry kind="lib" path="lib/org.jsslutils.jar"/>
-	<classpathentry kind="lib" path="lib/com.sun.grizzly.jar"/>
-	<classpathentry kind="lib" path="lib/com.sun.grizzly.util.jar"/>
-	<classpathentry kind="lib" path="lib/org.restlet.ext.grizzly.jar"/>
 	<classpathentry kind="lib" path="lib/javax.ws.rs.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.ext.jaxrs.jar"/>
+	<classpathentry kind="lib" path="lib/org.restlet.ext.jetty.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-ajp-7.1.0.v20100505.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-continuation-7.1.0.v20100505.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-http-7.1.0.v20100505.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-io-7.1.0.v20100505.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-server-7.1.0.v20100505.jar"/>
+	<classpathentry kind="lib" path="lib/jetty-util-7.1.0.v20100505.jar"/>
 	<classpathentry kind="output" path="application/build"/>
 </classpath>

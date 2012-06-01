@@ -1,8 +1,6 @@
 package at.ac.tuwien.esse.itseclarge.lab1;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;

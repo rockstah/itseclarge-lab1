@@ -38,7 +38,11 @@ public class CardServer {
 
 		JaxRsApplication application = new JaxRsApplication(server.getContext());
 		application.add(new CardApplication());
-		comp.getDefaultHost().attach(application);
+		
+		CertificateAuthenticator guard = new CertificateAuthenticator(server.getContext());
+		guard.setNext(application);
+		
+		comp.getDefaultHost().attach(guard);
 		comp.start();
 		System.out.println("Server started on port " + server.getPort());
 		System.out.println("Press key to stop server");
