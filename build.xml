@@ -29,6 +29,8 @@
     <target name="mkdirs" description="Creates all project directories" depends="init">
 			<mkdir dir="${path.app.build}"/>
 			<mkdir dir="${path.test.build}"/>
+			<mkdir dir="${path.app.src}"/>
+			<mkdir dir="${path.test.src}"/>
     </target>
     
     <target name="run_app" depends="init, build">
