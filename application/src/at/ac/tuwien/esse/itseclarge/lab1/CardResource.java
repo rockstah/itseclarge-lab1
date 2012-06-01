@@ -18,6 +18,9 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import at.ac.tuwien.esse.itseclarge.lab1.DAO.CardDAO;
+import at.ac.tuwien.esse.itseclarge.lab1.DAO.Simple.SimpleCardDAO;
+
 /**
  * Die Resource auf der alle Operationen spezifiziert sind.
  * 
@@ -26,6 +29,9 @@ import org.json.JSONObject;
 @Path("card")
 public class CardResource {
 
+	
+	private CardDAO cardDAO = new SimpleCardDAO();
+	
 	/**
 	 * Ruft das Limit für die gegebene Karte ab.
 	 * 
@@ -39,7 +45,7 @@ public class CardResource {
 	public Response limit(@QueryParam("cardno") String cardno,
 			@QueryParam("validity") String validity) {
 
-		Card c = Card.get(cardno, validity);
+		Card c = cardDAO.readCard(cardno, validity);
 
 		if (c == null) {
 			return CardResponse.clientError("This card does not exist. Or parameters are invalid.");
@@ -54,7 +60,7 @@ public class CardResource {
 	public Response isValid(@QueryParam("cardno") String cardno,
 			@QueryParam("validity") String validity) {
 		
-		Card c = Card.get(cardno, validity);
+		Card c = cardDAO.readCard(cardno, validity);
 
 		if (c == null) {
 			return CardResponse.clientError("This card does not exist. Or parameters are invalid.");
@@ -82,7 +88,7 @@ public class CardResource {
 			return CardResponse.clientError("Error while parsing your JSON object.");
 		}
 		
-		Card.save(c);
+		cardDAO.createCard(c);
 		return CardResponse.single(true);
 	}
 

@@ -18,40 +18,6 @@ public class Card {
 	private BigDecimal limit;
 	private long customer;
 	
-	private static Map<String, Card> cards = new HashMap<String, Card>();
-
-	/**
-	 * Holt eine Karte aus der Datenbank und erzeugt ein entsprechendes Card-Objekt.
-	 * 
-	 * @param cardno Kartennummer
-	 * @param validity Gültigkeitsdatum
-	 * @return Card-Objekt oder null wenn kein passendes existiert
-	 */
-	public static Card get(String cardno, String validity) {
-		if (new Card(cardno, validity).isFormallyValid()) {
-			return Card.cards.get(cardno + validity);
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * Speichert eine Karte in die Datenbank.
-	 * 
-	 * @param c Card-Objekt
-	 */
-	public static void save(Card c) {
-		Card.cards.put(c.getCardno() + c.getValidity(), c);
-	}
-
-	/**
-	 * Löscht eine Karte aus der Datenbank.
-	 * 
-	 * @param c Card-Objekt
-	 */
-	public static void delete(Card c) {
-		Card.cards.remove(c.getCardno() + c.getValidity());
-	}
 
 	public Card() {
 	}
@@ -195,7 +161,13 @@ public class Card {
 	 * @return true wenn korrekt, sonst false
 	 */
 	public boolean isFormallyValid() {
-		return true;
+			
+		if(cardno == null || validity == null) return false;
+		
+		/*
+		 * simpelste Annahme: CC Nummer 16 Digits ohne Leerzeichen, Gültigkeitsdatum Format MM/YY
+		 */
+		return cardno.matches("\\d{16}") && validity.matches("[0,1]/\\d{2}");
 	}
 
 	/**
