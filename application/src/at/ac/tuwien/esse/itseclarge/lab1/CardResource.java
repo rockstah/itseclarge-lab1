@@ -10,7 +10,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -72,7 +74,8 @@ public class CardResource {
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response create(InputStream cardObject) {
+	public Response create(InputStream cardObject, @Context SecurityContext request) {
+		System.out.println(request.getUserPrincipal());
 		StringWriter w = new StringWriter();
 		try {
 			IOUtils.copy(cardObject, w);
