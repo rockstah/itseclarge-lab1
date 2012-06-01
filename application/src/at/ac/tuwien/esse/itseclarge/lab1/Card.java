@@ -195,7 +195,13 @@ public class Card {
 	 * @return true wenn korrekt, sonst false
 	 */
 	public boolean isFormallyValid() {
-		return true;
+			
+		if(cardno == null || validity == null) return false;
+		
+		/*
+		 * simpelste Annahme: CC Nummer 16 Digits ohne Leerzeichen, Gültigkeitsdatum Format MM/YY
+		 */
+		return cardno.matches("\\d{16}") && validity.matches("[0,1]/\\d{2}");
 	}
 
 	/**
