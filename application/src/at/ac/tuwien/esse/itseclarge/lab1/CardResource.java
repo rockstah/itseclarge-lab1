@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import at.ac.tuwien.esse.itseclarge.lab1.DAO.CardDAO;
-import at.ac.tuwien.esse.itseclarge.lab1.DAO.Simple.SimpleCardDAO;
+import at.ac.tuwien.esse.itseclarge.lab1.DAO.JDBC.JDBCCardDAO;
 
 /**
  * Die Resource auf der alle Operationen spezifiziert sind.
@@ -26,8 +26,8 @@ import at.ac.tuwien.esse.itseclarge.lab1.DAO.Simple.SimpleCardDAO;
  */
 @Path("card")
 public class CardResource {
-	
-	private CardDAO cardDAO = new SimpleCardDAO();
+	private CardDAO cardDAO = new JDBCCardDAO();
+	//private CardDAO cardDAO = new SimpleCardDAO();
 	
 	/**
 	 * Ruft das Limit für die gegebene Karte ab.

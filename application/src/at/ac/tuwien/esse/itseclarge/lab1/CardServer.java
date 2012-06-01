@@ -24,31 +24,37 @@ public class CardServer {
 
 		Series<Parameter> p = server.getContext().getParameters();
 
-		p.add("sslContextFactory", "org.restlet.ext.ssl.PkixSslContextFactory");
+		// im Keystore wird das Server-Zertifikat aufbewart
 		p.add("keystorePath", KEYSTORE_PATH);
 		p.add("keystorePassword", KEYSTORE_PASSWORD);
 		p.add("keyPassword", KEY_PASSWORD);
 
+		// der Truststore enthält die Client-Zertifikate, denen vertraut wird
 		p.add("truststorePath", KEYSTORE_PATH);
 		p.add("truststorePassword", KEYSTORE_PASSWORD);
 
+		// aktiviert Mutual Authentication / 2-Way-SSL / Client Authentication
 		p.add("needClientAuthentication", "true");
-
-		server.getContext().setParameters(p);
 
 		JaxRsApplication application = new JaxRsApplication(server.getContext());
 		application.add(new CardApplication());
 		
+		// Der CertificateAuthenticator überprüft bei jedem Request ob für die
+		// gewählte Methode (GET/POST/DELETE/...) ein spezielles Zertifikat notwendig ist
+		// und authorisiert nur korrekte Anfragen.
 		CertificateAuthenticator guard = new CertificateAuthenticator(server.getContext());
 		guard.setNext(application);
 		
 		comp.getDefaultHost().attach(guard);
 		comp.start();
+		
 		System.out.println("Server started on port " + server.getPort());
 		System.out.println("Press key to stop server");
 		System.in.read();
+		
 		System.out.println("Stopping server");
 		comp.stop();
+		
 		System.out.println("Server stopped");
 	}
 }

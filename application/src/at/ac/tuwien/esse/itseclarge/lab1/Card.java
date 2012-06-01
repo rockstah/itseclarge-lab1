@@ -15,11 +15,19 @@ public class Card {
 	private String cardno, validity, signature;
 	private BigDecimal limit;
 	private long customer;
-	
 
 	public Card() {
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param cardno Kartennummer
+	 * @param validity Gültigkeitsdatum
+	 * @param limit Limit
+	 * @param customer Kunde
+	 * @param signature digitale Signatur
+	 */
 	public Card(String cardno, String validity, BigDecimal limit, long customer, String signature) {
 		this.setCardno(cardno);
 		this.setCustomer(customer);
@@ -28,10 +36,24 @@ public class Card {
 		this.setValidity(validity);
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param cardno Kartennummer
+	 * @param validity Gültigkeitsdatum
+	 */
 	public Card(String cardno, String validity) {
 		this(cardno, validity, null, 0L, null);
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * Erzeugt ein Card-Objekt aus einer JSON-Serialisierung.
+	 * 
+	 * @param o JSONObject
+	 * @throws JSONException wenn ein oder mehrere Felder nicht gesetzt sind
+	 */
 	public Card(JSONObject o) throws JSONException {
 		this.setCardno(o.getString("cardno"));
 		this.setCustomer(o.getLong("customer"));
@@ -159,12 +181,11 @@ public class Card {
 	 * @return true wenn korrekt, sonst false
 	 */
 	public boolean isFormallyValid() {
-			
-		if(cardno == null || validity == null) return false;
-		
-		/*
-		 * simpelste Annahme: CC Nummer 16 Digits ohne Leerzeichen, Gültigkeitsdatum Format MM/YY
-		 */
+
+		if (cardno == null || validity == null)
+			return false;
+
+		// simpelste Annahme: CC Nummer 16 Digits ohne Leerzeichen, Gültigkeitsdatum Format MM/YY
 		return cardno.matches("\\d{16}") && validity.matches("[0,1]/\\d{2}");
 	}
 

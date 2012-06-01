@@ -8,9 +8,8 @@ import at.ac.tuwien.esse.itseclarge.lab1.DAO.CardDAO;
 
 public class SimpleCardDAO implements CardDAO {
 
-	
 	private static Map<String, Card> cards = new HashMap<String, Card>();
-	
+
 	@Override
 	public void createCard(Card card) {
 		cards.put(card.getCardno() + card.getValidity(), card);
@@ -19,7 +18,6 @@ public class SimpleCardDAO implements CardDAO {
 	@Override
 	public void deleteCard(Card card) {
 		cards.remove(card.getCardno() + card.getValidity());
-
 	}
 
 	@Override
