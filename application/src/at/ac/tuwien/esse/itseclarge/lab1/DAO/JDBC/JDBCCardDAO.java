@@ -1,22 +1,24 @@
 package at.ac.tuwien.esse.itseclarge.lab1.DAO.JDBC;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.apache.commons.io.FileUtils;
 
 import at.ac.tuwien.esse.itseclarge.lab1.Card;
 import at.ac.tuwien.esse.itseclarge.lab1.DAO.CardDAO;
 
 public class JDBCCardDAO implements CardDAO {
 
-	/*
-	 * Diese Parameter ersetzen!!!
-	 */
-	private String username = "";
-	private String password = "";
 	private String conString = "jdbc:sqlite:database/cards.db";
 
 	PreparedStatement create_pstmt = null;
@@ -32,7 +34,11 @@ public class JDBCCardDAO implements CardDAO {
 
 			Class.forName("org.sqlite.JDBC");
 
-			Connection con = DriverManager.getConnection(conString, username, password);
+			Connection con = DriverManager.getConnection(conString);
+			
+			// Schema erzeugen falls nicht vorhanden
+			Statement s = con.createStatement();
+			s.executeUpdate(FileUtils.readFileToString(new File("database/schema.sql")));
 
 			create_pstmt = con.prepareStatement("insert into cards (cardno, validity,  signature, climit, customer) values (?,?,?,?,?)");
 			// create_pstmt = con.prepareStatement( "insert into cards values (?,?,?,?,?)");
@@ -41,13 +47,13 @@ public class JDBCCardDAO implements CardDAO {
 			delete_pstmt = con.prepareStatement("delete from cards where cardno = ?");
 
 		} catch (SQLException e) {
-			// TODO log + errorhandling
 			System.err.println(e.getMessage());
 			System.err.println("Something wrong with pstmt!");
 		} catch (ClassNotFoundException e) {
-			// TODO: handle exception
 			System.err.println("JDBC Driver not found!");
 			System.err.println(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 	}

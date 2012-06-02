@@ -9,6 +9,7 @@
         <property name="path.app.build" value="application/build"/>
         <property name="path.test.build" value="testbench/build"/>
         <property name="path.lib" value="lib"/>
+        <property name="database.file" value="database/cards.db"/>
 
         <path id="classpath">
             <fileset dir="${path.lib}">
@@ -58,5 +59,6 @@
     <target name="clean" depends="init">
     	<delete dir="${path.app.build}"/>
     	<delete dir="${path.test.build}"/>
+    	<delete file="${database.file}"/>
     </target>
 </project>
