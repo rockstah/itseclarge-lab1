@@ -34,11 +34,16 @@
     </target>
     
     <target name="run_app" depends="init, build">
-    	<java classname="at.ac.tuwien.esse.itseclarge.lab1.CardServer" fork="false" classpathref="classpath.runtime" />
+    	<java classname="at.ac.tuwien.esse.itseclarge.lab1.CardServer" fork="true" classpathref="classpath.runtime">
+    		<!--<jvmarg value="-Djavax.net.debug=all"/>-->
+    	</java>
     </target>
     
     <target name="run_test" depends="init, build">
-
+			<java classname="at.ac.tuwien.esse.itseclarge.lab1.test.KundenverwaltungClient" fork="true" classpathref="classpath.runtime">
+				<!--<jvmarg value="-Djavax.net.debug=all"/>-->
+				<jvmarg value="-Djavax.net.ssl.trustStore=keystore/truststore.jks"/>
+			</java>
     </target>
     
     <target name="build" depends="init, mkdirs">

@@ -14,9 +14,9 @@ import org.restlet.util.Series;
  */
 public class CardServer {
 
-	private static final String KEYSTORE_PATH = "keystore/kartenverwaltung-store.jks";
-	private static final String KEYSTORE_PASSWORD = "itsec1";
-	private static final String KEY_PASSWORD = "itsec2";
+	private static final String KEYSTORE_PATH = "keystore/karten/keystore.jks";
+	private static final String TRUSTSTORE_PATH = "keystore/truststore.jks";
+	private static final String STORE_PASSWORD = "itsec1";
 
 	public static void main(String[] args) throws Exception {
 		Component comp = new Component();
@@ -26,12 +26,12 @@ public class CardServer {
 
 		// im Keystore wird das Server-Zertifikat aufbewart
 		p.add("keystorePath", KEYSTORE_PATH);
-		p.add("keystorePassword", KEYSTORE_PASSWORD);
-		p.add("keyPassword", KEY_PASSWORD);
+		p.add("keystorePassword", STORE_PASSWORD);
+		p.add("keyPassword", "");
 
 		// der Truststore enthält die Client-Zertifikate, denen vertraut wird
-		p.add("truststorePath", KEYSTORE_PATH);
-		p.add("truststorePassword", KEYSTORE_PASSWORD);
+		p.add("truststorePath", TRUSTSTORE_PATH);
+		p.add("truststorePassword", STORE_PASSWORD);
 
 		// aktiviert Mutual Authentication / 2-Way-SSL / Client Authentication
 		p.add("needClientAuthentication", "true");
