@@ -26,8 +26,8 @@ import at.ac.tuwien.esse.itseclarge.lab1.DAO.JDBC.JDBCCardDAO;
  */
 @Path("card")
 public class CardResource {
+	
 	private CardDAO cardDAO = new JDBCCardDAO();
-	//private CardDAO cardDAO = new SimpleCardDAO();
 	
 	/**
 	 * Ruft das Limit für die gegebene Karte ab.
@@ -51,19 +51,22 @@ public class CardResource {
 		return CardResponse.single(c.getLimit());
 	}
 
+	/**
+	 * Überprüft die Gültigkeit einer Karte.
+	 * Eine Karte ist gültig, wenn sie existiert und ihre digitale Signatur gültig ist.
+	 * 
+	 * @param cardno Kartennummer
+	 * @param validity Gültigkeitsdatum
+	 * @return JSON-Objekt mit dem Resultat
+	 */
 	@GET
 	@Path("isValid")
 	@Produces("application/json")
 	public Response isValid(@QueryParam("cardno") String cardno,
 			@QueryParam("validity") String validity) {
-		
+
 		Card c = cardDAO.readCard(cardno, validity);
-
-		if (c == null) {
-			return CardResponse.clientError("This card does not exist. Or parameters are invalid.");
-		}
-
-		return CardResponse.single(c.isValid());
+		return CardResponse.single((c == null) ? false : c.isValid());
 	}
 	
 	@POST
@@ -85,7 +88,6 @@ public class CardResource {
 		}
 		
 		cardDAO.createCard(c);
-		System.out.println("success");
 		return CardResponse.single(true);
 	}
 

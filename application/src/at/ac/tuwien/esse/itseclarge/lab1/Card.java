@@ -1,9 +1,21 @@
 package at.ac.tuwien.esse.itseclarge.lab1;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.engine.util.Base64;
 
 /**
  * Verschiedene Funktionen, die das Arbeiten mit Kartendetails ermöglichen.
@@ -14,7 +26,7 @@ public class Card {
 
 	private String cardno, validity, signature;
 	private BigDecimal limit;
-	private long customer;
+	private Long customer;
 
 	public Card() {
 	}
@@ -28,7 +40,7 @@ public class Card {
 	 * @param customer Kunde
 	 * @param signature digitale Signatur
 	 */
-	public Card(String cardno, String validity, BigDecimal limit, long customer, String signature) {
+	public Card(String cardno, String validity, BigDecimal limit, Long customer, String signature) {
 		this.setCardno(cardno);
 		this.setCustomer(customer);
 		this.setLimit(limit);
@@ -48,7 +60,6 @@ public class Card {
 
 	/**
 	 * Constructor.
-	 * 
 	 * Erzeugt ein Card-Objekt aus einer JSON-Serialisierung.
 	 * 
 	 * @param o JSONObject
@@ -128,7 +139,7 @@ public class Card {
 	/**
 	 * @param customer the customer to set
 	 */
-	public void setCustomer(long customer) {
+	public void setCustomer(Long customer) {
 		this.customer = customer;
 	}
 
@@ -171,6 +182,16 @@ public class Card {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Card { %s, %s, %s, %s, %s }", p(this.cardno), p(this.validity),
+				p(this.limit), p(this.customer), p(this.signature));
+	}
+	
+	private static String p(Object o) {
+		return o == null ? "null" : o.toString();
+	}
+
 	/**
 	 * True wenn die Kartennummer und das Gültigkeitsdatum formal valide sind.
 	 * Das hat nichts mit Gültigkeit der Karte ansich zu tun, sondern nur mit der synaktischen
@@ -200,7 +221,38 @@ public class Card {
 	 * @return JSONObject mit true wenn gültig sonst false
 	 */
 	public boolean isValid() {
-		return true;
+		
+		String data = this.cardno + this.validity + this.limit.toString() + this.customer.toString();
+		
+		try {
+			FileInputStream f = new FileInputStream("keystore/karten/staffkey.pub");
+			byte[] key = new byte[f.available()];
+			f.read(key);
+			
+			Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
+			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(key);
+			KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
+			PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
+			
+			dsa.initVerify(pubKey);
+			dsa.update(data.getBytes());
+			return dsa.verify(Base64.decode(this.signature));
+		
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		} catch (SignatureException e) {
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		}
+			
+		return false;
 	}
 
 }

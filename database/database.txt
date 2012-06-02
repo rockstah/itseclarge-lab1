@@ -1,4 +1,0 @@
-create table cards(cardno CHAR(16), validity CHAR(5),  signature TEXT, climit INT, customer INT);
-
-create table cards(cardno CHAR(16), validity CHAR(5),  signature TEXT, climit DECIMAL(13,4), customer LONG);
-

@@ -1,9 +1,7 @@
 package at.ac.tuwien.esse.itseclarge.lab1.DAO.JDBC;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,11 +17,14 @@ import at.ac.tuwien.esse.itseclarge.lab1.DAO.CardDAO;
 
 public class JDBCCardDAO implements CardDAO {
 
-	private String conString = "jdbc:sqlite:database/cards.db";
+	private static final String JDBC_CONNECTION = "jdbc:sqlite:database/cards.db";
+	private static final String CREATE_STATEMENT = "insert into cards (cardno, validity,  signature, climit, customer) values (?,?,?,?,?)";
+	private static final String READ_STATEMENT = "select cardno, validity, signature, climit, customer from cards where cardno = ? and validity = ?";
+	private static final String DELETE_STATEMENT = "delete from cards where cardno = ? and validity = ?";
 
-	PreparedStatement create_pstmt = null;
-	PreparedStatement delete_pstmt = null;
-	PreparedStatement read_pstmt = null;
+	private PreparedStatement createStatement;
+	private PreparedStatement deleteStatement;
+	private PreparedStatement readStatement;
 
 	/*
 	 * Der Einfachheit halber sind die datenbankspezifischen Daten hier, da es nur 1 DAO gibt
@@ -33,18 +34,16 @@ public class JDBCCardDAO implements CardDAO {
 		try {
 
 			Class.forName("org.sqlite.JDBC");
+			Connection con = DriverManager.getConnection(JDBC_CONNECTION);
 
-			Connection con = DriverManager.getConnection(conString);
-			
 			// Schema erzeugen falls nicht vorhanden
 			Statement s = con.createStatement();
 			s.executeUpdate(FileUtils.readFileToString(new File("database/schema.sql")));
 
-			create_pstmt = con.prepareStatement("insert into cards (cardno, validity,  signature, climit, customer) values (?,?,?,?,?)");
-			// create_pstmt = con.prepareStatement( "insert into cards values (?,?,?,?,?)");
-
-			read_pstmt = con.prepareStatement("SELECT cardno, validity,  signature, climit, customer FROM cards");
-			delete_pstmt = con.prepareStatement("delete from cards where cardno = ?");
+			// Prepared Statements parsen
+			createStatement = con.prepareStatement(CREATE_STATEMENT);
+			readStatement = con.prepareStatement(READ_STATEMENT);
+			deleteStatement = con.prepareStatement(DELETE_STATEMENT);
 
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
@@ -61,24 +60,22 @@ public class JDBCCardDAO implements CardDAO {
 	@Override
 	public void createCard(Card card) {
 		try {
-			create_pstmt.setString(1, card.getCardno());
-			create_pstmt.setString(2, card.getValidity());
-			create_pstmt.setString(3, card.getSignature());
-			create_pstmt.setString(4, card.getLimit().toPlainString()); // setBigDecimal doesent work!
-			create_pstmt.setLong(5, card.getCustomer());
-			// create_pstmt.setString(4, card.getLimit().toString());
-			// create_pstmt.setLong(5, card.getCustomer());
+			
+			createStatement.setString(1, card.getCardno());
+			createStatement.setString(2, card.getValidity());
+			createStatement.setString(3, card.getSignature());
 
-			// DEBUG
-			System.err.println(create_pstmt.toString());
+			// setBigDecimal doesn't work!
+			createStatement.setString(4, card.getLimit().toPlainString());
+			createStatement.setLong(5, card.getCustomer());
 
-			create_pstmt.executeUpdate();
+			createStatement.executeUpdate();
+			createStatement.clearParameters();
+			
 		} catch (SQLException e) {
 			// TODO log + errorhandling
 			System.err.println(e.getMessage());
-			System.err.println("createCard: Error creating " + card.getCardno() + ":"
-					+ card.getValidity() + " " + card.getSignature() + " " + card.getLimit() + " "
-					+ card.getCustomer());
+			System.err.println("createCard: Error creating " + card);
 		}
 
 	}
@@ -87,8 +84,9 @@ public class JDBCCardDAO implements CardDAO {
 	public void deleteCard(Card card) {
 
 		try {
-			delete_pstmt.setString(1, card.getCardno());
-			delete_pstmt.executeQuery();
+			deleteStatement.setString(1, card.getCardno());
+			deleteStatement.executeQuery();
+			deleteStatement.clearParameters();
 		} catch (SQLException e) {
 			// TODO log + errorhandling
 			System.err.println(e.getMessage());
@@ -101,23 +99,29 @@ public class JDBCCardDAO implements CardDAO {
 		Card c = new Card();
 
 		try {
-			ResultSet rs = read_pstmt.executeQuery();
-
-			while (rs.next()) {
-				// TODO check auf 1 Datensatz (bzw unique in DB setzen)
-				c.setCardno(rs.getString("cardno"));
-				c.setCustomer(rs.getLong("customer"));
-				c.setLimit(new BigDecimal(rs.getString("climit")));
-				c.setSignature(rs.getString("signature"));
-				c.setValidity(rs.getString("validity"));
-			}
+			readStatement.setString(1, cardno);
+			readStatement.setString(2, validity);
+			ResultSet rs = readStatement.executeQuery();
+			readStatement.clearParameters();
+			
+			// wenn keine Resultate da sind, null zurückgeben
+			if (rs.getFetchSize() == 0)
+				return null;
+			
+			rs.next();
+			c.setCardno(rs.getString("cardno"));
+			c.setCustomer(rs.getLong("customer"));
+			c.setLimit(new BigDecimal(rs.getString("climit")));
+			c.setSignature(rs.getString("signature"));
+			c.setValidity(rs.getString("validity"));
+			
 		} catch (SQLException e) {
 			// TODO log + errorhandling
 			System.err.println(e.getMessage());
 			System.err.println("readCard: not found");
 			return null;
 		}
-
+		
 		return c;
 	}
 

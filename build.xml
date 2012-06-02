@@ -47,6 +47,11 @@
 			</java>
     </target>
     
+    <target name="make_staffkey" depends="init, build">
+			<java classname="at.ac.tuwien.esse.itseclarge.lab1.test.StaffKeyGenerator" fork="true" classpathref="classpath.runtime">
+			</java>
+    </target>
+    
     <target name="build" depends="init, mkdirs">
     	<javac destdir="${path.app.build}" srcdir="${path.app.src}" includeantruntime="false">
     		<classpath refid="classpath"/>

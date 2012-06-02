@@ -13,5 +13,11 @@ wird ausschließlich von jeweils einem Modul verwedet.
 Der Truststore ist für alle Module identisch und enthält nur das Root-Zertifikat
 der CA.
 
+Die Kundenverwaltung besitzt außerdem noch die privaten Schlüssel der
+einzelnen Mitarbeiter. In einem Realsystem könnten diese Schlüssel etwa
+auf Smartcards abgelegt sein.
+
 Die Kartenverwaltung besitzt einen weiteren Store in dem die Zertifikate
-der Komponenten aufbewahrt werden, die erweiterte Rechte haben.
+der Komponenten aufbewahrt werden, die erweiterte Rechte haben. Außerdem
+sind hier die öffentlichen Schlüssel der Mitarbeiter hinterlegt, um die
+digitalen Signaturen prüfen zu können.
