@@ -1,5 +1,6 @@
 package at.ac.tuwien.esse.itseclarge.lab1.test;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 import org.json.JSONObject;
 import org.restlet.data.Method;
@@ -41,23 +42,21 @@ public class KundenverwaltungClient extends CardClient {
 	
 	private String sign(String data) {
 		try {
-			FileInputStream f = new FileInputStream("keystore/kunden/staffkey.priv");
-			byte[] key = new byte[f.available()];
-			f.read(key);
-			
+			BufferedInputStream in = new BufferedInputStream(new FileInputStream("keystore/kunden/staffkey.priv"));
+			byte[] key = new byte[in.available()];
+			in.read(key);
+						
 			Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
-			X509EncodedKeySpec privKeySpec = new X509EncodedKeySpec(key);
+			PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(key);
 			KeyFactory keyFactory = KeyFactory.getInstance("DSA", "SUN");
 			PrivateKey privKey = keyFactory.generatePrivate(privKeySpec);
 			
 			dsa.initSign(privKey);
-			dsa.update(data.getBytes());
+			dsa.update(data.getBytes("UTF-8"));
 			
 			return Base64.encode(dsa.sign(), false);
 			
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchProviderException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -67,15 +66,19 @@ public class KundenverwaltungClient extends CardClient {
 			e.printStackTrace();
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			e.printStackTrace();
 		}
 		
-		return ""; 
+		return null;
 	}
 	
 	public static void main(String[] args) throws Exception {
 		KundenverwaltungClient c = new KundenverwaltungClient();
 		System.out.println(c.isValid("0000000000000000", "01/19"));
 		System.out.println(c.create("0000000000000000", "01/19", new BigDecimal(2000), 1L));
+		System.out.println(c.isValid("0000000000000000", "01/19"));
+		System.out.println(c.limit("0000000000000000", "01/19"));
 		System.exit(0);
 	}
 	

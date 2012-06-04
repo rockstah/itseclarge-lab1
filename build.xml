@@ -61,9 +61,15 @@
     	</javac>    
     </target>
     
-    <target name="clean" depends="init">
+    <target name="clean_app" depends="init">
     	<delete dir="${path.app.build}"/>
+    	<delete file="${database.file}"/>
+    </target>
+    
+    <target name="clean_test" depends="init">
     	<delete dir="${path.test.build}"/>
     	<delete file="${database.file}"/>
     </target>
+    
+    <target name="clean" depends="clean_app, clean_test"/>
 </project>

@@ -19,7 +19,7 @@ public class JDBCCardDAO implements CardDAO {
 
 	private static final String JDBC_CONNECTION = "jdbc:sqlite:database/cards.db";
 	private static final String CREATE_STATEMENT = "insert into cards (cardno, validity,  signature, climit, customer) values (?,?,?,?,?)";
-	private static final String READ_STATEMENT = "select cardno, validity, signature, climit, customer from cards where cardno = ? and validity = ?";
+	private static final String READ_STATEMENT = "select * from cards where cardno = ? and validity = ?";
 	private static final String DELETE_STATEMENT = "delete from cards where cardno = ? and validity = ?";
 
 	private PreparedStatement createStatement;
@@ -59,6 +59,7 @@ public class JDBCCardDAO implements CardDAO {
 
 	@Override
 	public void createCard(Card card) {
+		
 		try {
 			
 			createStatement.setString(1, card.getCardno());
@@ -96,29 +97,32 @@ public class JDBCCardDAO implements CardDAO {
 
 	@Override
 	public Card readCard(String cardno, String validity) {
-		Card c = new Card();
+		Card c;
 
 		try {
 			readStatement.setString(1, cardno);
 			readStatement.setString(2, validity);
 			ResultSet rs = readStatement.executeQuery();
-			readStatement.clearParameters();
 			
 			// wenn keine Resultate da sind, null zurückgeben
-			if (rs.getFetchSize() == 0)
+			if (rs.next() == false) {
 				return null;
+			}
 			
-			rs.next();
-			c.setCardno(rs.getString("cardno"));
-			c.setCustomer(rs.getLong("customer"));
-			c.setLimit(new BigDecimal(rs.getString("climit")));
-			c.setSignature(rs.getString("signature"));
-			c.setValidity(rs.getString("validity"));
+			c = new Card(
+				rs.getString("cardno"),
+				rs.getString("validity"),
+				new BigDecimal(rs.getDouble("climit")),
+				rs.getLong("customer"),
+				rs.getString("signature")
+			);
+			
+			readStatement.clearParameters();
 			
 		} catch (SQLException e) {
 			// TODO log + errorhandling
-			System.err.println(e.getMessage());
-			System.err.println("readCard: not found");
+			System.out.println(e.getMessage());
+			System.out.println("readCard: not found");
 			return null;
 		}
 		

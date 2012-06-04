@@ -22,11 +22,7 @@ public class SimpleCardDAO implements CardDAO {
 
 	@Override
 	public Card readCard(String cardno, String validity) {
-		if (new Card(cardno, validity).isFormallyValid()) {
-			return cards.get(cardno + validity);
-		} else {
-			return null;
-		}
+		return cards.get(cardno + validity);
 	}
 
 }

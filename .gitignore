@@ -1,4 +1,4 @@
 *.class
-cards.db
+*.db
 */build/*
 Thumbs.db

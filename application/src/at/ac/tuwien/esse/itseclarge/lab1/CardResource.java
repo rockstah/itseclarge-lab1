@@ -66,6 +66,7 @@ public class CardResource {
 			@QueryParam("validity") String validity) {
 
 		Card c = cardDAO.readCard(cardno, validity);
+		System.out.println(c);
 		return CardResponse.single((c == null) ? false : c.isValid());
 	}
 	

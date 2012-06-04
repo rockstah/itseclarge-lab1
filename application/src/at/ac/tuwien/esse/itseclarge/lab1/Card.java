@@ -1,5 +1,6 @@
 package at.ac.tuwien.esse.itseclarge.lab1;
 
+import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -12,7 +13,7 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-
+import java.util.Calendar;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.engine.util.Base64;
@@ -27,9 +28,6 @@ public class Card {
 	private String cardno, validity, signature;
 	private BigDecimal limit;
 	private Long customer;
-
-	public Card() {
-	}
 
 	/**
 	 * Constructor.
@@ -46,16 +44,6 @@ public class Card {
 		this.setLimit(limit);
 		this.setSignature(signature);
 		this.setValidity(validity);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param cardno Kartennummer
-	 * @param validity Gültigkeitsdatum
-	 */
-	public Card(String cardno, String validity) {
-		this(cardno, validity, null, 0L, null);
 	}
 
 	/**
@@ -193,9 +181,9 @@ public class Card {
 	}
 
 	/**
-	 * True wenn die Kartennummer und das Gültigkeitsdatum formal valide sind.
-	 * Das hat nichts mit Gültigkeit der Karte ansich zu tun, sondern nur mit der synaktischen
-	 * Korrektheit der Eingabedaten.
+	 * True wenn alle Parameter definiert sind und Kartennummer und Gültigkeitsdatum
+	 * den formalen Kriterien entsprechen. Nummern sind 16 Ziffern lang, das Gültigkeitsdatum
+	 * muss im Format MM/YY spezifiziert sein.
 	 * 
 	 * @param cardno Kartennummer; kann null sein
 	 * @param validity Gültigkeitsdatum; kann null sein
@@ -203,11 +191,12 @@ public class Card {
 	 */
 	public boolean isFormallyValid() {
 
-		if (cardno == null || validity == null)
+		// Alle Felder sind verpflichtend
+		if (cardno == null || validity == null || signature == null || customer == null || limit == null)
 			return false;
 
 		// simpelste Annahme: CC Nummer 16 Digits ohne Leerzeichen, Gültigkeitsdatum Format MM/YY
-		return cardno.matches("\\d{16}") && validity.matches("[0,1]/\\d{2}");
+		return cardno.matches("\\d{16}") && validity.matches("[0-1]\\d/\\d{2}") && (Base64.decode(signature).length > 0);
 	}
 
 	/**
@@ -222,12 +211,33 @@ public class Card {
 	 */
 	public boolean isValid() {
 		
+		//
+		// Datumsprüfung
+		//
+		
+		Calendar now = Calendar.getInstance();
+		int month = now.get(Calendar.MONTH) + 1;
+		int year = now.get(Calendar.YEAR);
+		
+		String[] parts = this.validity.split("/");
+		
+		// Gültigkeitsjahr ist bereits vorbei
+		if (Integer.valueOf(parts[0]) < year) return false;
+		
+		// Gültigkeitsmonat ist vorbei
+		if (Integer.valueOf(parts[0]) == year && Integer.valueOf(parts[1]) < month) return false;
+		
+		
+		//
+		// Signaturprüfung
+		//
+		
 		String data = this.cardno + this.validity + this.limit.toString() + this.customer.toString();
 		
 		try {
-			FileInputStream f = new FileInputStream("keystore/karten/staffkey.pub");
-			byte[] key = new byte[f.available()];
-			f.read(key);
+			BufferedInputStream in = new BufferedInputStream(new FileInputStream("keystore/karten/staffkey.pub"));
+			byte[] key = new byte[in.available()];
+			in.read(key);
 			
 			Signature dsa = Signature.getInstance("SHA1withDSA", "SUN");
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(key);
@@ -235,12 +245,10 @@ public class Card {
 			PublicKey pubKey = keyFactory.generatePublic(pubKeySpec);
 			
 			dsa.initVerify(pubKey);
-			dsa.update(data.getBytes());
+			dsa.update(data.getBytes("UTF-8"));
 			return dsa.verify(Base64.decode(this.signature));
 		
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchProviderException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -249,6 +257,8 @@ public class Card {
 		} catch (SignatureException e) {
 			e.printStackTrace();
 		} catch (InvalidKeyException e) {
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
 			e.printStackTrace();
 		}
 			
