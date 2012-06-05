@@ -14,11 +14,12 @@ import org.apache.commons.io.FileUtils;
 
 import at.ac.tuwien.esse.itseclarge.lab1.Card;
 import at.ac.tuwien.esse.itseclarge.lab1.DAO.CardDAO;
+import at.ac.tuwien.esse.itseclarge.lab1.DAO.InvalidCardException;
 
 public class JDBCCardDAO implements CardDAO {
 
-	private static final String JDBC_CONNECTION = "jdbc:sqlite:database/cards.db";
-	private static final String CREATE_STATEMENT = "insert into cards (cardno, validity,  signature, climit, customer) values (?,?,?,?,?)";
+	public static final String JDBC_CONNECTION = "jdbc:sqlite:database/cards.db";
+	public static final String CREATE_STATEMENT = "insert into cards (cardno, validity,  signature, climit, customer) values (?,?,?,?,?)";
 	private static final String READ_STATEMENT = "select * from cards where cardno = ? and validity = ?";
 	private static final String DELETE_STATEMENT = "delete from cards where cardno = ? and validity = ?";
 
@@ -58,7 +59,11 @@ public class JDBCCardDAO implements CardDAO {
 	}
 
 	@Override
-	public void createCard(Card card) {
+	public void createCard(Card card) throws InvalidCardException {
+		
+		if (!card.isFormallyValid() || !card.isValid()) {
+			throw new InvalidCardException();
+		}
 		
 		try {
 			

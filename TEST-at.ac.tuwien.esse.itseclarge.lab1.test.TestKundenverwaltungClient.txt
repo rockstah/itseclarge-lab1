@@ -1,0 +1,39 @@
+Testsuite: at.ac.tuwien.esse.itseclarge.lab1.test.TestKundenverwaltungClient
+Tests run: 3, Failures: 1, Errors: 2, Time elapsed: 2.171 sec
+------------- Standard Output ---------------
+received: {"error":"The submitted card object was not valid."}
+received: {"error":"The submitted card object was not valid."}
+------------- ---------------- ---------------
+------------- Standard Error -----------------
+Jun 5, 2012 2:06:03 AM org.restlet.engine.http.connector.HttpClientHelper start
+INFO: Starting the default HTTP client
+Jun 5, 2012 2:06:04 AM org.restlet.engine.http.connector.HttpClientHelper start
+INFO: Starting the default HTTP client
+Jun 5, 2012 2:06:05 AM org.restlet.engine.http.connector.HttpClientHelper start
+INFO: Starting the default HTTP client
+------------- ---------------- ---------------
+
+Testcase: testEmpty took 1.124 sec
+	FAILED
+null
+junit.framework.AssertionFailedError
+	at at.ac.tuwien.esse.itseclarge.lab1.test.TestKundenverwaltungClient.testEmpty(Unknown Source)
+
+Testcase: testCreate took 0.514 sec
+	Caused an ERROR
+JSONObject["result"] not found.
+org.json.JSONException: JSONObject["result"] not found.
+	at org.json.JSONObject.get(JSONObject.java:516)
+	at org.json.JSONObject.getBoolean(JSONObject.java:532)
+	at at.ac.tuwien.esse.itseclarge.lab1.test.KundenverwaltungClient.create(Unknown Source)
+	at at.ac.tuwien.esse.itseclarge.lab1.test.TestKundenverwaltungClient.testCreate(Unknown Source)
+
+Testcase: testCreateExpired took 0.519 sec
+	Caused an ERROR
+JSONObject["result"] not found.
+org.json.JSONException: JSONObject["result"] not found.
+	at org.json.JSONObject.get(JSONObject.java:516)
+	at org.json.JSONObject.getBoolean(JSONObject.java:532)
+	at at.ac.tuwien.esse.itseclarge.lab1.test.KundenverwaltungClient.create(Unknown Source)
+	at at.ac.tuwien.esse.itseclarge.lab1.test.TestKundenverwaltungClient.testCreateExpired(Unknown Source)
+

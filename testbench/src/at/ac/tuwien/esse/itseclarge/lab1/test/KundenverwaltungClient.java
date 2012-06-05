@@ -14,6 +14,7 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
@@ -37,6 +38,7 @@ public class KundenverwaltungClient extends CardClient {
 		card.put("signature", sign(cardno + validity + limit.toString() + customer.toString()));
 		
 		JSONObject result = makeRequest(Method.POST, ref, new JsonRepresentation(card));
+		System.out.println("received: " + result);
 		return result.getBoolean("result");
 	}
 	
@@ -80,6 +82,15 @@ public class KundenverwaltungClient extends CardClient {
 		System.out.println(c.isValid("0000000000000000", "01/19"));
 		System.out.println(c.limit("0000000000000000", "01/19"));
 		System.exit(0);
+	}
+
+	public boolean delete(String cardno, String validity) throws JSONException, IOException {
+		Reference ref = new Reference(ENDPOINT);
+		ref.addQueryParameter("cardno", cardno);
+		ref.addQueryParameter("validity", validity);
+		
+		JSONObject result = makeRequest(Method.DELETE, ref);
+		return result.getBoolean("result");
 	}
 	
 }

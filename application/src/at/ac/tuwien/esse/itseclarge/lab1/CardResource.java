@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -17,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import at.ac.tuwien.esse.itseclarge.lab1.DAO.CardDAO;
+import at.ac.tuwien.esse.itseclarge.lab1.DAO.InvalidCardException;
 import at.ac.tuwien.esse.itseclarge.lab1.DAO.JDBC.JDBCCardDAO;
 
 /**
@@ -66,7 +68,6 @@ public class CardResource {
 			@QueryParam("validity") String validity) {
 
 		Card c = cardDAO.readCard(cardno, validity);
-		System.out.println(c);
 		return CardResponse.single((c == null) ? false : c.isValid());
 	}
 	
@@ -88,7 +89,19 @@ public class CardResource {
 			return CardResponse.clientError("Error while parsing your JSON object.");
 		}
 		
-		cardDAO.createCard(c);
+		try {
+			cardDAO.createCard(c);
+		} catch (InvalidCardException e) {
+			return CardResponse.clientError("The submitted card object was not valid.");
+		}
+		
+		return CardResponse.single(true);
+	}
+	
+	@DELETE
+	public Response delete(@QueryParam("cardno") String cardno, @QueryParam("validity") String validity) {
+		Card c = cardDAO.readCard(cardno, validity);
+		if (c != null) cardDAO.deleteCard(c);
 		return CardResponse.single(true);
 	}
 

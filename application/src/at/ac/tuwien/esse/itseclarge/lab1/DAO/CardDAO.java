@@ -13,8 +13,9 @@ public interface CardDAO {
 	 * Speichert eine Karte in die Datenquelle.
 	 * 
 	 * @param card Card-Objekt
+	 * @throws InvalidCardException wenn die Karte ungültig ist
 	 */
-	public void createCard(Card card);
+	public void createCard(Card card) throws InvalidCardException;
 	
 	/**
 	 * Löscht eine Karte aus der Datenquelle.

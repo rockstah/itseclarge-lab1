@@ -196,7 +196,7 @@ public class Card {
 			return false;
 
 		// simpelste Annahme: CC Nummer 16 Digits ohne Leerzeichen, Gültigkeitsdatum Format MM/YY
-		return cardno.matches("\\d{16}") && validity.matches("[0-1]\\d/\\d{2}") && (Base64.decode(signature).length > 0);
+		return cardno.matches("\\d{16}") && validity.matches("[0-1]\\d/\\d{2}");
 	}
 
 	/**
@@ -222,11 +222,10 @@ public class Card {
 		String[] parts = this.validity.split("/");
 		
 		// Gültigkeitsjahr ist bereits vorbei
-		if (Integer.valueOf(parts[0]) < year) return false;
+		if (Integer.valueOf("20" + parts[1]) < year) return false;
 		
 		// Gültigkeitsmonat ist vorbei
-		if (Integer.valueOf(parts[0]) == year && Integer.valueOf(parts[1]) < month) return false;
-		
+		if (Integer.valueOf("20" + parts[1]) == year && Integer.valueOf(parts[0]) < month) return false;
 		
 		//
 		// Signaturprüfung
