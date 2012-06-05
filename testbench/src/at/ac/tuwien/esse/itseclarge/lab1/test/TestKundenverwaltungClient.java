@@ -1,7 +1,9 @@
 package at.ac.tuwien.esse.itseclarge.lab1.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -13,6 +15,7 @@ import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.restlet.data.Status;
 
 import at.ac.tuwien.esse.itseclarge.lab1.DAO.JDBC.JDBCCardDAO;
 
@@ -35,7 +38,11 @@ public class TestKundenverwaltungClient {
 
 	@After
 	public void tearDown() throws JSONException, IOException {
-		this.client.delete(CARD_NUMBER_VALID, CARD_VALIDITY_VALID);
+		try {
+			this.client.delete(CARD_NUMBER_VALID, CARD_VALIDITY_VALID);
+		} catch (APIException e) {
+			// ignore, since this is optimistic cleanup
+		}
 		this.client = null;
 	}
 
@@ -63,28 +70,34 @@ public class TestKundenverwaltungClient {
 
 	/**
 	 * Es soll nicht möglich sein, eine abgelaufene Karte zu erstellen.
-	 * @throws IOException 
-	 * @throws JSONException 
 	 * 
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	@Test(expected = APIException.class)
-	public void testCreateExpired() throws APIException, JSONException, IOException {
-		this.client.create(CARD_NUMBER_VALID, CARD_VALIDITY_INVALID_EXPIRED, CARD_LIMIT, CARD_CUSTOMER);
+	@Test
+	public void testCreateExpired() throws IOException {
+		try {
+			this.client.create(CARD_NUMBER_VALID, CARD_VALIDITY_INVALID_EXPIRED, CARD_LIMIT,
+					CARD_CUSTOMER);
+		} catch (APIException e) {
+			assertEquals(e.getStatus(), Status.CLIENT_ERROR_BAD_REQUEST);
+		}
 	}
-	
+
 	/**
 	 * Es soll nicht möglich sein, eine Karte mit ungültiger Nummer zu erstellen.
-	 * @throws IOException 
-	 * @throws JSONException 
 	 * 
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	@Test(expected = APIException.class)
-	public void testCreateInvalidNumber() throws APIException, JSONException, IOException {
-		this.client.create(CARD_NUMBER_INVALID, CARD_VALIDITY_VALID, CARD_LIMIT, CARD_CUSTOMER);
+	@Test
+	public void testCreateInvalidNumber() throws IOException {
+		try {
+			this.client.create(CARD_NUMBER_INVALID, CARD_VALIDITY_VALID, CARD_LIMIT, CARD_CUSTOMER);
+			fail();
+		} catch (APIException e) {
+			assertEquals(e.getStatus(), Status.CLIENT_ERROR_BAD_REQUEST);
+		}
 	}
-	
+
 	/**
 	 * Dieser Test simuliert einen Hackerangriff auf die Datenbank.
 	 * Eine Karte wird direkt in die Datenbank geschrieben, allerdings ohne gültige Signatur.
@@ -99,7 +112,7 @@ public class TestKundenverwaltungClient {
 		PreparedStatement p = con.prepareStatement(JDBCCardDAO.CREATE_STATEMENT);
 		p.setString(1, CARD_NUMBER_VALID);
 		p.setString(2, CARD_VALIDITY_VALID);
-		
+
 		// Wir können keine Signatur erzeugen.
 		p.setString(3, "");
 
@@ -108,9 +121,9 @@ public class TestKundenverwaltungClient {
 
 		p.executeUpdate();
 		p.clearParameters();
-		
+
 		con.close();
-		
+
 		// Versuche die Karte über den Server zu validieren...
 		assertFalse(this.client.isValid(CARD_NUMBER_VALID, CARD_VALIDITY_VALID));
 	}

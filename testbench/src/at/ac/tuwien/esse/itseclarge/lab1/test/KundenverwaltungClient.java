@@ -14,6 +14,7 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
+import org.eclipse.jetty.util.log.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.data.Method;
@@ -27,24 +28,21 @@ public class KundenverwaltungClient extends CardClient {
 		super("keystore/kunden/keystore.jks");
 	}
 	
-	public boolean create(String cardno, String validity, BigDecimal limit, Long customer) throws APIException, JSONException, IOException {
+	public boolean create(String cardno, String validity, BigDecimal limit, Long customer) throws APIException, IOException {
 		Reference ref = new Reference(ENDPOINT);
-		
 		JSONObject card = new JSONObject();
-		card.put("cardno", cardno);
-		card.put("validity", validity);
-		card.put("limit", limit);
-		card.put("customer", customer);
-		card.put("signature", sign(cardno + validity + limit.toString() + customer.toString()));
 		
-		JSONObject result = makeRequest(Method.POST, ref, new JsonRepresentation(card));
-		
-		if (result.has("result")) {
-			return result.getBoolean("result");
-		} else {
-			throw new APIException(result.getString("error"));
+		try {
+			card.put("cardno", cardno);
+			card.put("validity", validity);
+			card.put("limit", limit);
+			card.put("customer", customer);
+			card.put("signature", sign(cardno + validity + limit.toString() + customer.toString()));
+			return makeRequest(Method.POST, ref, new JsonRepresentation(card)).getBoolean("result");
+		} catch(JSONException e) {
+			Log.warn("JSON was not well-formed.");
+			return false;
 		}
-		
 	}
 	
 	private String sign(String data) {
@@ -80,7 +78,7 @@ public class KundenverwaltungClient extends CardClient {
 		return null;
 	}
 
-	public boolean delete(String cardno, String validity) throws JSONException, IOException {
+	public boolean delete(String cardno, String validity) throws JSONException, IOException, APIException {
 		Reference ref = new Reference(ENDPOINT);
 		ref.addQueryParameter("cardno", cardno);
 		ref.addQueryParameter("validity", validity);

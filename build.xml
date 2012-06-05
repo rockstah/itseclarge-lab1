@@ -47,6 +47,9 @@
 			<test name="at.ac.tuwien.esse.itseclarge.lab1.test.TestKundenverwaltungClient" fork="true">
 				<formatter type="brief" usefile="false"/>
 			</test>
+			<test name="at.ac.tuwien.esse.itseclarge.lab1.test.TestTransaktionverwaltungClient" fork="true">
+				<formatter type="brief" usefile="false"/>
+			</test>
 		</junit>
 	</target>
 
