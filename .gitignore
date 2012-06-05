@@ -1,5 +1,9 @@
 *.class
 *.db
 */build/*
-Thumbs.db
-TEST-*
+*.log
+*.aux
+*.out
+*.toc
+*.zip
+*.pdf

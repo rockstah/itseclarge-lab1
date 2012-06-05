@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1"
+    xmlns ="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1"
+    elementFormDefault="qualified">
+
+   <xsd:element name="messagestatus">
+    <xsd:complexType>
+        <xsd:sequence>
+        <xsd:element name="envelope" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+                <xsd:attribute name="messageNr" type="xsd:int" use="required"/>
+                <xsd:attribute name="status" type="messageStatusName" use="required"/>
+            </xsd:complexType>
+        </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="processnumber" type="processNumber" use="required"/>
+    </xsd:complexType>
+   </xsd:element>
+
+    <xsd:simpleType name="messageStatusName">
+          <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="in quere"/>
+        <xsd:enumeration value="sent"/>
+        <xsd:enumeration value="confirmed recieved by customer"/>
+        <xsd:enumeration value="phonenumber does not exist"/>
+        <xsd:enumeration value="undeliverable"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="processNumber">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="32" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

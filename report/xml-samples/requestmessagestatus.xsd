@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1"
+    xmlns ="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1"
+    elementFormDefault="qualified">
+
+   <xsd:element name="requestmessagestatus">
+    <xsd:complexType>
+        <xsd:sequence>
+        <xsd:element name="messageNr" minOccurs="1" maxOccurs="unbounded">
+            <xsd:complexType>
+                <xsd:attribute name="number" type="processNumber" use="required"/>
+            </xsd:complexType>
+        </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+   </xsd:element>
+
+    <xsd:simpleType name="processNumber">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="32" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+</xsd:schema>

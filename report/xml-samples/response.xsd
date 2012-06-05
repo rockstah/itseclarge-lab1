@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1"
+    xmlns ="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1"
+    elementFormDefault="qualified">
+
+   <!-- Definition of the root element (Messages) -->  
+   <xsd:element name="response">
+        <xsd:complexType>
+            <xsd:all>
+            <xsd:element name="status" type="Status" />
+            </xsd:all>
+        </xsd:complexType>
+   </xsd:element>
+
+   <!-- ################################################################### -->
+
+ 
+   <xsd:complexType name="Status" mixed="true">
+        <xsd:sequence>
+            <xsd:element name="processNumber" minOccurs="0" maxOccurs="1">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="32" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="errormessage" minOccurs="0" maxOccurs="1">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="1000" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="name" type="statusName" use="required"/>
+   </xsd:complexType>
+
+    <xsd:simpleType name="statusName">
+          <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="received"/>
+        <xsd:enumeration value="parsing error"/>
+        <xsd:enumeration value="quota reached"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+</xsd:schema>

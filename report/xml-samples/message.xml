@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<messages xmlns ="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1">
+
+    <envelope messageNr="1">
+        <email to="sample@somewhere.com">
+            <subject>Kreditkartenabrechnung</subject>
+            <message>Sehr geehrter Herr XXX!
+Anbei ihre aktuelle Kreditkartenabrechnung
+            </message>
+        </email>
+    </envelope>
+
+    <envelope messageNr="2">
+        <email to="sample@somewhereelse.com">
+            <subject>Kreditkartenlimit</subject>
+            <message>Sehr geehrter Herr XXX!
+Sie haben ihr monatliches Limit erreicht
+            </message>
+        </email>
+    </envelope>
+
+    <envelope messageNr="3">
+        <sms phonenumber="06996666666">
+            <message>
+Abbuchung über 100.000.- Euro
+            </message>
+        </sms>
+    </envelope>
+
+    <envelope messageNr="4">
+        <letter>
+            <address>
+                <name>Mustermann Max</name>
+                <address>Fakestreet 123</address>
+                <city>1040 Wien</city>
+                <country>Austria</country>
+            </address>
+            <message>Sehr geehrter Kunde!
+Sie haben mehrfach ihr Limit überschritten, blablabla
+            </message>
+        </letter>
+    </envelope>
+
+</messages>

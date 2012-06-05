@@ -1,0 +1,254 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Institut für Rechnergestuetzte Automation
+% Forschungsgruppe Industrial Software
+% Arbeitsgruppe ESSE
+% http://security.inso.tuwien.ac.at/
+% lva.security@inso.tuwien.ac.at
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% packages
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\typearea[current]{calc}        % neuberechnung des textsatzes
+\usepackage[a4paper,left=25mm,right=25mm,top=23mm,bottom=35mm]{geometry} % rand einstellungen
+
+\usepackage{fancyhdr}
+%\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[naustrian]{babel}
+
+\usepackage[colorlinks]{hyperref} % fuer links im inhaltsverzeichnis und bei siehe...
+\usepackage[all]{hypcap} % zu den bildern und nicht zur bildunterschrift springen
+% \usepackage{hyperref}
+
+\usepackage{fancyhdr}
+\usepackage{calc}
+\usepackage[usenames]{color}
+\usepackage{moreverb}
+\usepackage{amssymb}
+\usepackage[final]{graphicx}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{enumitem}
+\usepackage{comment}
+\usepackage{lastpage}
+\usepackage{listings}
+
+\usepackage{marvosym}
+
+
+\usepackage{ifthen}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% for listings
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage[usenames]{xcolor}
+
+\definecolor{dgreen}{RGB}{30,71,21}
+\definecolor{codegray}{RGB}{240,240,240}
+
+\usepackage{listings}
+\lstset{
+	language=bash,                  % choose the language of the code
+	basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+	numbers=left,                   % where to put the line-numbers
+	numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+	stepnumber=2,                   % the step between two line-numbers. If it's 1 each line 
+		                        % will be numbered
+	numbersep=5pt,                  % how far the line-numbers are from the code
+	backgroundcolor=\color{codegray},  % choose the background color. You must add \usepackage{color}
+	showspaces=false,               % show spaces adding particular underscores
+	showstringspaces=false,         % underline spaces within strings
+	showtabs=false,                 % show tabs within strings adding particular underscores
+	frame=single,	                % adds a frame around the code
+	tabsize=2,	                % sets default tabsize to 2 spaces
+	captionpos=b,                   % sets the caption-position to bottom
+	breaklines=true,                % sets automatic line breaking
+	breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+	basicstyle=\ttfamily
+}
+
+\lstdefinestyle{simple}{
+	language=bash,                  % choose the language of the code
+	basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+	numbers=left,                   % where to put the line-numbers
+	numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+	stepnumber=2,                   % the step between two line-numbers. If it's 1 each line 
+		                        % will be numbered
+	numbersep=5pt,                  % how far the line-numbers are from the code
+	backgroundcolor=\color{codegray},  % choose the background color. You must add \usepackage{color}
+	showspaces=false,               % show spaces adding particular underscores
+	showstringspaces=false,         % underline spaces within strings
+	showtabs=false,                 % show tabs within strings adding particular underscores
+	frame=single,	                % adds a frame around the code
+	tabsize=2,	                % sets default tabsize to 2 spaces
+	captionpos=b,                   % sets the caption-position to bottom
+	breaklines=true,                % sets automatic line breaking
+	breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+	basicstyle=\ttfamily,
+	prebreak={\Righttorque}
+}
+
+\lstdefinestyle{c}{
+	language=C,
+	backgroundcolor=\color{codegray},
+	basicstyle=\linespread{1.0}\ttfamily\scriptsize,
+	keywordstyle=\bfseries\ttfamily\scriptsize\color[rgb]{0,0,1},
+        identifierstyle=\color{dgreen},
+	commentstyle=\textit,
+	tabsize=2,
+	float=ph,
+	extendedchars,
+	breaklines,
+        breakatwhitespace=true,
+	prebreak={\space\hbox{\ensuremath\hookleftarrow}},,
+	numbers=left,
+	numberstyle=\tiny,
+        numbersep=5pt,
+	stringstyle=\textsl,
+	showstringspaces=false,
+	captionpos=b,
+	aboveskip=24pt,
+	prebreak={\Righttorque}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% some size definitions and counter settings
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\floatpagefraction}{0.9}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{1.0}
+\renewcommand{\bottomfraction}{1.0}
+\renewcommand{\figurename}{Abbildung}
+
+\setcounter{totalnumber}{3}
+\setcounter{bottomnumber}{3}
+\setcounter{topnumber}{3}
+
+\setlength{\unitlength}{1mm}
+\setlength{\parindent}{6mm}
+\setlength{\parskip}{12pt plus2pt minus2pt}
+
+\newenvironment{qa}{
+  \begin{list}{}{\leftmargin=0em}
+}{
+  \end{list}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% fuszzeile
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+\fancyhf{}
+
+%Kopfzeile mittig mit Kaptilname
+\fancyhead[C]{}
+%Linie oben
+\renewcommand{\headrulewidth}{0.0pt}
+ 
+%Fußzeile links bzw. innen
+\fancyfoot[L]{\ifthenelse{\equal{\lab}{Lab0}}{MatrNr. \studentAMatrnr}{Gruppe \gruppe}}
+%Fußzeile mittig (Seitennummer)
+\fancyfoot[C]{Seite \thepage\ von \pageref*{LastPage}}
+\fancyfoot[R]{\lvanr, \semester, \lab}
+%Linie unten
+\renewcommand{\footrulewidth}{0.5pt}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% define variables used on titlepage
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\setcounter{footnote}{0} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% esse header
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\esseheader}{\begin{tabular}{@{}l@{}l@{}}%
+    \parbox[t]{8.88cm}{TU Wien\\%
+    Institut f{\"u}r Rechnergest{\"u}tzte Automation\\%
+    Forschungsgruppe Industrial Software\\%
+    Arbeitsgruppe ESSE\\%
+    \texttt{http://security.inso.tuwien.ac.at/}}&%
+    \parbox[t]{7cm}{\raisebox{-0.5ex-\height}{\includegraphics[height=1.5cm]{./imgs/esse-logo-bw.png} \includegraphics[height=1.5cm]{./imgs/inso-bw.png} \includegraphics[height=1.5cm]{./imgs/inf-tu-logo-kombi-bw.png}} }%
+    \end{tabular}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% titlepage
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\einzelMitglieder}{\begin{tabular}{|p{5.0cm}|p{1.9cm}|p{7.2cm}|}\hline
+  \textbf{Name} & \textbf{MatrNr.} & \textbf{Emailaddresse}\\\hline
+  \studentAName & \studentAMatrnr & \studentAEmail \\ \hline
+\end{tabular}
+}
+
+\newcommand{\gruppenMitglieder}{\begin{tabular}{|p{5.0cm}|p{1.9cm}|p{7.2cm}|}\hline
+  \textbf{Name} & \textbf{MatrNr.} & \textbf{Emailaddresse}\\\hline
+  \studentAName & \studentAMatrnr & \studentAEmail \\ \hline
+  \studentBName & \studentBMatrnr & \studentBEmail \\ \hline
+  \studentCName & \studentCMatrnr & \studentCEmail \\ \hline
+  \studentDName & \studentDMatrnr & \studentDEmail \\ \hline
+\end{tabular}
+}
+
+
+\def\maketitle{
+\esseheader
+\begin{center}
+\vspace{2.5cm}
+{\LARGE\bf \dokumenttyp\\}
+\vspace{0.5cm}
+{\LARGE\bf \lvaname\\}
+\vspace{0.5cm}
+{\LARGE \lvanr\ - \semester\\}
+\vspace{1.0cm}
+{\LARGE \datum}
+\vspace{1.5cm}
+
+\ifthenelse{\equal{\lab}{Lab0}}{}{
+{\LARGE Gruppe \gruppe}
+\vspace{1.5cm}
+}
+
+\end{center}
+
+\ifthenelse{\equal{\lab}{Lab0}}{\einzelMitglieder}{\gruppenMitglieder}
+
+\vspace{1.5cm}
+%}}}
+
+
+
+\newpage
+} % \def\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+

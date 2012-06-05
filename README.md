@@ -1,6 +1,9 @@
 IT Security in Large Infrastructures (Lab 1)
 ============================================
 
+Der komplette Code dieses Projektes ist auf github gehostet:
+https://github.com/codecurry/itseclarge-lab1
+
 Architektur
 -----------
 Das Projekt ist als JAX-RS RESTful Webservice realisiert. Die Kommunikation erfolgt über HTTP und ist über 2-Way-SSL Authentifizierung geschützt. Folgende Technologien wurden verwendet:

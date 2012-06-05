@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ITSecLargeLab1" default="run_app" basedir="">
 
-	<description>Development-Version der build.xml</description>
+	<description>Diese build.xml wird im Abgabearchiv ausgeliefert.</description>
 
 	<!-- Variablen setzen -->
 	<target name="init" description="Initialize environment">
@@ -67,41 +67,6 @@
 		</javac>
 	</target>
 
-	<!-- Mitarbeiter-Schlüssel für die Signaturen erzeugen -->
-	<target name="make_staffkey" depends="init, build">
-		<java classname="at.ac.tuwien.esse.itseclarge.lab1.test.StaffKeyGenerator" fork="true" classpathref="classpath.runtime">
-		</java>
-	</target>
-	
-	<!-- Abgabedokument übersetzen -->
-	<target name="report">
-		<exec executable="pdflatex" dir="report" failonerror="true">
-			<arg value="protokoll.tex"/>
-		</exec>
-	</target>
-	
-	<!-- Server + Testbench zippen -->
-	<target name="zip_app" depends="init, clean">
-		<zip destfile="lab1d_11.zip">
-			<zipfileset dir="${path.app.src}" prefix="11/${path.app.src}"/>
-			<zipfileset dir="${path.test.src}" prefix="11/${path.test.src}"/>
-			<zipfileset dir="database" prefix="11/database"/>
-			<zipfileset dir="keystore" prefix="11/keystore"/>
-			<zipfileset dir="${path.lib}" prefix="11/${path.lib}"/>
-			<zipfileset dir="." includes="build-minimal.xml" fullpath="11/build.xml"/>
-			<zipfileset dir="." includes="README.md" fullpath="11/README"/>
-		</zip>
-	</target>
-	
-	<!-- Abgabearchiv zippen -->
-	<target name="zip" depends="init, report, zip_app">
-		<zip destfile="lab1_11.zip">
-			<zipfileset dir="report" includes="protokoll.pdf" fullpath="lab1_11.pdf"/>
-			<zipfileset dir="." includes="lab1d_11.zip" fullpath="lab1d_11.zip"/>
-		</zip>
-		<delete file="lab1d_11.zip"/>
-	</target>
-
 	<!-- Server-Build cleanen -->
 	<target name="clean_app" depends="init">
 		<delete dir="${path.app.build}"/>
@@ -113,18 +78,7 @@
 		<delete dir="${path.test.build}"/>
 		<delete file="${database.file}"/>
 	</target>
-	
-	<!-- Sonstiges Zeug cleanen -->
-	<target name="clean_etc" depends="init">
-		<delete file="report/protokoll.log"/>
-		<delete file="report/protokoll.toc"/>
-		<delete file="report/protokoll.out"/>
-		<delete file="report/protokoll.aux"/>
-		<delete file="report/protokoll.pdf"/>
-		<delete file="lab1_11.zip"/>
-		<delete file="lab1d_11.zip"/>
-	</target>
 
 	<!-- Alles cleanen -->
-	<target name="clean" depends="clean_app, clean_test, clean_etc"/>
+	<target name="clean" depends="clean_app, clean_test"/>
 </project>

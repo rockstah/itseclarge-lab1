@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1"
+    xmlns ="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1"
+    elementFormDefault="qualified">
+
+   <!-- Definition of the root element (Messages) -->  
+   <xsd:element name="messages">
+    <xsd:complexType>
+        <xsd:sequence>
+        <xsd:element name="envelope" minOccurs="1" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:choice minOccurs="1" maxOccurs="1">
+                        <xsd:element name="email" type="Email" maxOccurs="1"/>
+                         <xsd:element name="sms" type="SMS" maxOccurs="1" />
+                         <xsd:element name="voicemail" type="Voicemail" maxOccurs="1" />
+                         <xsd:element name="letter" type="Letter" maxOccurs="1" />
+                    </xsd:choice>
+                <xsd:attribute name="messageNr" type="xsd:int" use="required"/>
+                </xsd:complexType>
+
+        </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:unique name="messageKey">
+          <xsd:selector xpath="./envelope"/>
+              <xsd:field xpath="@messageNr"/>  <!-- Attributname -->
+         </xsd:unique>
+   </xsd:element>
+
+   <!-- ################################################################### -->
+
+ 
+   <xsd:complexType name="Email" mixed="true">
+        <xsd:sequence>
+        <xsd:element name="subject" type="xsd:string" maxOccurs="1"/>
+        <xsd:element name="message" maxOccurs="1">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="32000" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+        </xsd:element>                            <!-- kann einfach erweitert werden zb für Anhänge etc -->
+        </xsd:sequence>
+        <xsd:attribute name="to" type="emailAddress" use="required"/>
+        <xsd:attribute name="priority" type="xsd:boolean" use="optional"/>
+   </xsd:complexType>
+
+   <xsd:complexType name="SMS">
+        <xsd:sequence>
+            <xsd:element name="message" maxOccurs="1">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="160" /> <!-- Nachrichtenwegspezifische Einschränkungen -->
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="phonenumber" type="phoneNumber" use="required"/>
+   </xsd:complexType>
+
+   <xsd:complexType name="Voicemail">
+        <xsd:sequence>
+            <xsd:element name="message" maxOccurs="1">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="5000" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="phonenumber" type="phoneNumber" use="required"/>
+   </xsd:complexType>
+
+   <xsd:complexType name="Letter" mixed="true">
+        <xsd:sequence>
+        <xsd:element name="address" type="address" maxOccurs="1"/>
+        <xsd:element name="message" maxOccurs="1">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="32000" />
+                    </xsd:restriction>
+                </xsd:simpleType>
+        </xsd:element>
+        </xsd:sequence>
+   </xsd:complexType>
+
+    <xsd:complexType name="address">
+        <xsd:sequence>
+                   <xsd:element name="name" type="xsd:string" />
+                   <xsd:element name="address" type="xsd:string"/>
+                   <xsd:element name="city" type="xsd:string"/>
+                   <xsd:element name="country" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:simpleType name="emailAddress">
+        <xsd:restriction base="xsd:string">
+        <xsd:pattern value="[^@]+@[^\.]+\..+"/>
+        <xsd:maxLength value="100" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="phoneNumber">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\+?[0-9]+([- ][0-9]+)*"/>
+            <xsd:maxLength value="50" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+</xsd:schema>

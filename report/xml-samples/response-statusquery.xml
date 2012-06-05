@@ -1,0 +1,10 @@
+<messagestatus xmlns ="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1" processnumber="32853">
+    <envelope messageNr="1" status="undeliverable" />
+    <envelope messageNr="2" status="in quere" />
+    <envelope messageNr="3" status="in quere" />
+    <envelope messageNr="4" status="sent" />
+    <envelope messageNr="5" status="sent" />
+    <envelope messageNr="6" status="in quere" />
+    <envelope messageNr="7" status="in quere" />
+    <envelope messageNr="8" status="confirmed recieved by customer" />
+</messagestatus>

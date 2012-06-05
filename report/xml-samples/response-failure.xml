@@ -1,0 +1,7 @@
+<response xmlns ="http://security.inso.tuwien.ac.at/itsec-large-infrastructures-ss2012/labs/lab1">
+    <status name="quota reached">
+        <errormessage>
+            You have send too many messages over the past 1 hour.
+        </errormessage>
+    </status>
+</response>
