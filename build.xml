@@ -81,7 +81,7 @@
 	</target>
 	
 	<!-- Server + Testbench zippen -->
-	<target name="zip_app" depends="init, clean">
+	<target name="zip_app" depends="init, clean_app, clean_test">
 		<zip destfile="lab1d_11.zip">
 			<zipfileset dir="${path.app.src}" prefix="11/${path.app.src}"/>
 			<zipfileset dir="${path.test.src}" prefix="11/${path.test.src}"/>
