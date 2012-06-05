@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class CardResponse {
 
 	public static Response create(String json) {
-		return Response.ok(CardResponse.createJSON(json)).build();
+		return Response.ok(CardResponse.createJSON(json)).type("application/json").build();
 	}
 
 	protected static JSONObject createJSON(String json) {
@@ -24,15 +24,18 @@ public class CardResponse {
 	}
 
 	public static Response clientError(String message) {
-		return Response.status(Status.BAD_REQUEST)
+		System.out.println("SENDING JSON RESPONSE: " + CardResponse.createJSON("{\"error\":\"" + message + "\"}"));
+		return Response.status(Status.BAD_REQUEST).type("application/json")
 				.entity(CardResponse.createJSON("{\"error\":\"" + message + "\"}")).build();
 	}
 
 	public static Response single(boolean b) {
+		System.out.println("SENDING JSON RESPONSE: " + CardResponse.createJSON("{\"result\":\"" + (b ? "true" : "false") + "\"}"));
 		return CardResponse.create("{\"result\":" + (b ? "true" : "false") + "}");
 	}
 
 	public static Response single(BigDecimal b) {
+		System.out.println("SENDING JSON RESPONSE: " + CardResponse.createJSON("{\"result\":\"" + b.toString() + "\"}"));
 		return CardResponse.create("{\"result\":" + b.toString() + "}");
 	}
 

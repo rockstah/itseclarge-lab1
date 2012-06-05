@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ITSecLargeLab1" default="all" basedir="">
+<project name="ITSecLargeLab1" default="run_app" basedir="">
 
-    <description></description>
+	<description></description>
 
-    <target name="init" description="Initialize environment">
-        <property name="path.app.src" value="application/src"/>
-        <property name="path.test.src" value="testbench/src"/>
-        <property name="path.app.build" value="application/build"/>
-        <property name="path.test.build" value="testbench/build"/>
-        <property name="path.lib" value="lib"/>
-        <property name="database.file" value="database/cards.db"/>
+	<target name="init" description="Initialize environment">
+		<property name="path.app.src" value="application/src"/>
+		<property name="path.test.src" value="testbench/src"/>
+		<property name="path.app.build" value="application/build"/>
+		<property name="path.test.build" value="testbench/build"/>
+		<property name="path.lib" value="lib"/>
+		<property name="database.file" value="database/cards.db"/>
 
-        <path id="classpath">
-            <fileset dir="${path.lib}">
-                <include name="*.jar"/>
-            </fileset>
-        </path>
-        
-        <path id="classpath.runtime">
-            <fileset dir="${path.lib}">
-                <include name="*.jar"/>
-            </fileset>
-            <dirset dir="${path.app.build}"/>
-            <dirset dir="${path.test.build}"/>
-        </path>
+		<path id="classpath">
+			<fileset dir="${path.lib}">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
 
-    </target>
+		<path id="classpath.runtime">
+			<fileset dir="${path.lib}">
+				<include name="*.jar"/>
+			</fileset>
+			<dirset dir="${path.app.build}"/>
+			<dirset dir="${path.test.build}"/>
+		</path>
+	</target>
 
-    <target name="mkdirs" description="Creates all project directories" depends="init">
-			<mkdir dir="${path.app.build}"/>
-			<mkdir dir="${path.test.build}"/>
-			<mkdir dir="${path.app.src}"/>
-			<mkdir dir="${path.test.src}"/>
-    </target>
-    
-    <target name="run_app" depends="init, build">
-    	<java classname="at.ac.tuwien.esse.itseclarge.lab1.CardServer" fork="true" classpathref="classpath.runtime">
-    		<!--<jvmarg value="-Djavax.net.debug=all"/>-->
-    	</java>
-    </target>
-    
-    <target name="run_test" depends="init, build">
-    	<junit printsummary="on">
-    		<classpath refid="classpath.runtime"/>
-    		<!--<jvmarg value="-Djavax.net.debug=all"/>-->
-  			<jvmarg value="-Djavax.net.ssl.trustStore=keystore/truststore.jks"/>
-  			
-    		<test name="at.ac.tuwien.esse.itseclarge.lab1.test.TestKundenverwaltungClient" fork="true"/>
-    	</junit>
-    </target>
-    
-    <target name="make_staffkey" depends="init, build">
-			<java classname="at.ac.tuwien.esse.itseclarge.lab1.test.StaffKeyGenerator" fork="true" classpathref="classpath.runtime">
-			</java>
-    </target>
-    
-    <target name="build" depends="init, mkdirs">
-    	<javac destdir="${path.app.build}" srcdir="${path.app.src}" includeantruntime="false">
-    		<classpath refid="classpath"/>
-    	</javac>
-    	<javac destdir="${path.test.build}" srcdir="${path.test.src}" includeantruntime="false">
-    		<classpath refid="classpath.runtime"/>
-    	</javac>    
-    </target>
-    
-    <target name="clean_app" depends="init">
-    	<delete dir="${path.app.build}"/>
-    	<delete file="${database.file}"/>
-    </target>
-    
-    <target name="clean_test" depends="init">
-    	<delete dir="${path.test.build}"/>
-    	<delete file="${database.file}"/>
-    </target>
-    
-    <target name="clean" depends="clean_app, clean_test"/>
+	<target name="mkdirs" description="Creates all project directories" depends="init">
+		<mkdir dir="${path.app.build}"/>
+		<mkdir dir="${path.test.build}"/>
+		<mkdir dir="${path.app.src}"/>
+		<mkdir dir="${path.test.src}"/>
+	</target>
+
+	<target name="run_app" depends="init, build">
+		<java classname="at.ac.tuwien.esse.itseclarge.lab1.CardServer" fork="true" classpathref="classpath.runtime">
+			<!--<jvmarg value="-Djavax.net.debug=all"/>-->
+		</java>
+	</target>
+
+	<target name="run_test" depends="init, build">
+		<junit>
+			<classpath refid="classpath.runtime"/>
+			<!--<jvmarg value="-Djavax.net.debug=all"/>-->
+			<jvmarg value="-Djavax.net.ssl.trustStore=keystore/truststore.jks"/>
+			<test name="at.ac.tuwien.esse.itseclarge.lab1.test.TestKundenverwaltungClient" fork="true">
+				<formatter type="brief" usefile="false"/>
+			</test>
+		</junit>
+	</target>
+
+	<target name="make_staffkey" depends="init, build">
+		<java classname="at.ac.tuwien.esse.itseclarge.lab1.test.StaffKeyGenerator" fork="true" classpathref="classpath.runtime">
+		</java>
+	</target>
+
+	<target name="build" depends="init, mkdirs">
+		<javac destdir="${path.app.build}" srcdir="${path.app.src}" includeantruntime="false">
+			<classpath refid="classpath"/>
+		</javac>
+		<javac destdir="${path.test.build}" srcdir="${path.test.src}" includeantruntime="false">
+			<classpath refid="classpath.runtime"/>
+		</javac>
+	</target>
+
+	<target name="clean_app" depends="init">
+		<delete dir="${path.app.build}"/>
+		<delete file="${database.file}"/>
+	</target>
+
+	<target name="clean_test" depends="init">
+		<delete dir="${path.test.build}"/>
+		<delete file="${database.file}"/>
+	</target>
+
+	<target name="clean" depends="clean_app, clean_test"/>
 </project>

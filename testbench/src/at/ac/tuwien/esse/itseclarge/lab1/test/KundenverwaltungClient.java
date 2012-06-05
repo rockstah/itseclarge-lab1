@@ -27,7 +27,7 @@ public class KundenverwaltungClient extends CardClient {
 		super("keystore/kunden/keystore.jks");
 	}
 	
-	public boolean create(String cardno, String validity, BigDecimal limit, Long customer) throws Exception {
+	public boolean create(String cardno, String validity, BigDecimal limit, Long customer) throws APIException, JSONException, IOException {
 		Reference ref = new Reference(ENDPOINT);
 		
 		JSONObject card = new JSONObject();
@@ -38,8 +38,13 @@ public class KundenverwaltungClient extends CardClient {
 		card.put("signature", sign(cardno + validity + limit.toString() + customer.toString()));
 		
 		JSONObject result = makeRequest(Method.POST, ref, new JsonRepresentation(card));
-		System.out.println("received: " + result);
-		return result.getBoolean("result");
+		
+		if (result.has("result")) {
+			return result.getBoolean("result");
+		} else {
+			throw new APIException(result.getString("error"));
+		}
+		
 	}
 	
 	private String sign(String data) {
@@ -73,15 +78,6 @@ public class KundenverwaltungClient extends CardClient {
 		}
 		
 		return null;
-	}
-	
-	public static void main(String[] args) throws Exception {
-		KundenverwaltungClient c = new KundenverwaltungClient();
-		System.out.println(c.isValid("0000000000000000", "01/19"));
-		System.out.println(c.create("0000000000000000", "01/19", new BigDecimal(2000), 1L));
-		System.out.println(c.isValid("0000000000000000", "01/19"));
-		System.out.println(c.limit("0000000000000000", "01/19"));
-		System.exit(0);
 	}
 
 	public boolean delete(String cardno, String validity) throws JSONException, IOException {

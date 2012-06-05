@@ -14,6 +14,8 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Calendar;
+
+import org.eclipse.jetty.util.log.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.engine.util.Base64;
@@ -248,17 +250,18 @@ public class Card {
 			return dsa.verify(Base64.decode(this.signature));
 		
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			Log.warn("This JVM does not support the required algorithms.");
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.warn("Could not read public key file.");
 		} catch (InvalidKeySpecException e) {
-			e.printStackTrace();
+			Log.warn("Key specification was invalid.");
 		} catch (SignatureException e) {
-			e.printStackTrace();
+			Log.info("There was something funky with the signature, making it INVALID.");
+			return false;
 		} catch (InvalidKeyException e) {
-			e.printStackTrace();
+			Log.warn("Key for decryption was invalid.");
 		} catch (NoSuchProviderException e) {
-			e.printStackTrace();
+			Log.warn("No such Provider for signature checking.");
 		}
 			
 		return false;

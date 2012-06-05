@@ -91,10 +91,10 @@ public class JDBCCardDAO implements CardDAO {
 
 		try {
 			deleteStatement.setString(1, card.getCardno());
-			deleteStatement.executeQuery();
+			deleteStatement.setString(2, card.getValidity());
+			deleteStatement.executeUpdate();
 			deleteStatement.clearParameters();
 		} catch (SQLException e) {
-			// TODO log + errorhandling
 			System.err.println(e.getMessage());
 			System.err.println("deleteCard: not found");
 		}
@@ -131,7 +131,7 @@ public class JDBCCardDAO implements CardDAO {
 			return null;
 		}
 		
-		return c;
+		return c.isValid() ? c : null;
 	}
 
 }

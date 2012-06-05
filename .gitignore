@@ -2,3 +2,4 @@
 *.db
 */build/*
 Thumbs.db
+TEST-*

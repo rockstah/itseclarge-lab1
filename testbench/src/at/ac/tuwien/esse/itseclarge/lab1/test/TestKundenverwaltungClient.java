@@ -1,11 +1,13 @@
 package at.ac.tuwien.esse.itseclarge.lab1.test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import junit.framework.TestCase;
 
 import org.json.JSONException;
 import org.junit.After;
@@ -14,7 +16,7 @@ import org.junit.Test;
 
 import at.ac.tuwien.esse.itseclarge.lab1.DAO.JDBC.JDBCCardDAO;
 
-public class TestKundenverwaltungClient extends TestCase {
+public class TestKundenverwaltungClient {
 
 	static final String CARD_NUMBER_VALID = "0000000000000000";
 	static final String CARD_NUMBER_INVALID = "00000000000000";
@@ -56,27 +58,31 @@ public class TestKundenverwaltungClient extends TestCase {
 	public void testCreate() throws Exception {
 		assertTrue(this.client.create(CARD_NUMBER_VALID, CARD_VALIDITY_VALID, CARD_LIMIT, CARD_CUSTOMER));
 		assertTrue(this.client.isValid(CARD_NUMBER_VALID, CARD_VALIDITY_VALID));
+		assertTrue(this.client.limit(CARD_NUMBER_VALID, CARD_VALIDITY_VALID).equals(CARD_LIMIT));
 	}
 
 	/**
 	 * Es soll nicht möglich sein, eine abgelaufene Karte zu erstellen.
+	 * @throws IOException 
+	 * @throws JSONException 
 	 * 
 	 * @throws Exception
 	 */
-	@Test
-	public void testCreateExpired() throws Exception {
-		assertFalse(this.client.create(CARD_NUMBER_VALID, CARD_VALIDITY_INVALID_EXPIRED, CARD_LIMIT,
-				CARD_CUSTOMER));
+	@Test(expected = APIException.class)
+	public void testCreateExpired() throws APIException, JSONException, IOException {
+		this.client.create(CARD_NUMBER_VALID, CARD_VALIDITY_INVALID_EXPIRED, CARD_LIMIT, CARD_CUSTOMER);
 	}
 	
 	/**
 	 * Es soll nicht möglich sein, eine Karte mit ungültiger Nummer zu erstellen.
+	 * @throws IOException 
+	 * @throws JSONException 
 	 * 
 	 * @throws Exception
 	 */
-	@Test
-	public void testCreateInvalidNumber() throws Exception {
-		assertFalse(this.client.create(CARD_NUMBER_INVALID, CARD_VALIDITY_VALID, CARD_LIMIT, CARD_CUSTOMER));
+	@Test(expected = APIException.class)
+	public void testCreateInvalidNumber() throws APIException, JSONException, IOException {
+		this.client.create(CARD_NUMBER_INVALID, CARD_VALIDITY_VALID, CARD_LIMIT, CARD_CUSTOMER);
 	}
 	
 	/**
@@ -97,12 +103,13 @@ public class TestKundenverwaltungClient extends TestCase {
 		// Wir können keine Signatur erzeugen.
 		p.setString(3, "");
 
-		// setBigDecimal doesn't work!
 		p.setString(4, CARD_LIMIT.toPlainString());
 		p.setLong(5, CARD_CUSTOMER);
 
 		p.executeUpdate();
 		p.clearParameters();
+		
+		con.close();
 		
 		// Versuche die Karte über den Server zu validieren...
 		assertFalse(this.client.isValid(CARD_NUMBER_VALID, CARD_VALIDITY_VALID));
