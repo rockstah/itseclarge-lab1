@@ -10,16 +10,14 @@ Das Projekt ist als JAX-RS RESTful Webservice realisiert. Die Kommunikation erfo
 * RESTlet 2.0
 * SQLite 0.56
 
-
 Howto
 -----
-* Repository clonen
-* ant run_app ausführen
-
+* ant run_app -- Server starten
+* ant run_test -- Unit-Tests starten
+* ant clean -- Build und Datenbank entfernen
 
 Hinweise
 --------
-* Zum Testen im Browser muss zumindest eines der Client-Zertifikate installiert werden
-* Die Client-Zertifikate haben _kein_ Passwort, auch wenn beim Import danach gefragt wird
-* Zum Testen eignet sich [RESTClient](https://addons.mozilla.org/de/firefox/addon/restclient/) als Extension für Firefox
+* die Client-Zertifikate haben _kein_ Passwort, auch wenn beim Import danach gefragt wird
 * Passwort für den Keystore ist _itsec1_
+* um den SSL/TLS-Verkehr zu beobachten im build.xml die jvmarg-Tags aktivieren

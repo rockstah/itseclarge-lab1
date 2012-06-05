@@ -71,6 +71,12 @@ public class CardResource {
 		return CardResponse.single((c == null) ? false : c.isValid());
 	}
 	
+	/**
+	 * Erzeugt eine neue Karte.
+	 * 
+	 * @param cardObject die neue Karte als Request-Body
+	 * @return JSON-Objekt mit true/false oder einem Fehler
+	 */
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
@@ -98,7 +104,15 @@ public class CardResource {
 		return CardResponse.single(true);
 	}
 	
+	/**
+	 * Entfernt eine Karte.
+	 * 
+	 * @param cardno Kartennummer
+	 * @param validity Gültigkeitsdatum
+	 * @return JSON-Objekt mit true
+	 */
 	@DELETE
+	@Produces("application/json")
 	public Response delete(@QueryParam("cardno") String cardno, @QueryParam("validity") String validity) {
 		Card c = cardDAO.readCard(cardno, validity);
 		if (c != null) cardDAO.deleteCard(c);

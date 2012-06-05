@@ -52,6 +52,12 @@
 			</test>
 		</junit>
 	</target>
+	
+	<target name="run_kunden" depends="init, build">
+		<java classname="at.ac.tuwien.esse.itseclarge.lab1.test.KundenverwaltungClient" fork="true" classpathref="classpath.runtime">
+			<jvmarg value="-Djavax.net.ssl.trustStore=keystore/truststore.jks"/>
+		</java>
+	</target>
 
 	<target name="make_staffkey" depends="init, build">
 		<java classname="at.ac.tuwien.esse.itseclarge.lab1.test.StaffKeyGenerator" fork="true" classpathref="classpath.runtime">
