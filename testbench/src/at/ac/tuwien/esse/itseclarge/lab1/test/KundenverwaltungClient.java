@@ -1,8 +1,10 @@
 package at.ac.tuwien.esse.itseclarge.lab1.test;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -24,6 +26,100 @@ import org.restlet.ext.json.JsonRepresentation;
 
 public class KundenverwaltungClient extends CardClient {
 
+	
+	public static void main(String[] args) throws IOException, APIException{
+		
+		KundenverwaltungClient client = new KundenverwaltungClient();
+		InputStreamReader stdin = new InputStreamReader(System.in);
+		BufferedReader in = new BufferedReader(stdin);
+		String input = ""; 
+		
+		while (!(input.equals("3"))){
+				
+				printMenu();			
+				input = in.readLine();  
+				
+				if (input.equals("1")){ //erstelle Karte
+					
+						System.out.println("Kartennummer:");
+						String cardno = in.readLine();
+						
+						System.out.println("Gültig bis MM/YY:");
+						String validity = in.readLine();	
+						
+						System.out.println("Limit:");
+						BigDecimal limit = new BigDecimal(in.readLine());	
+
+						System.out.println("Kunde Nr.:");
+						Long customer = new Long(in.readLine());						
+						
+						boolean sucess;
+						
+						try{
+							sucess = client.create(cardno,validity, limit, customer);
+						}catch (APIException e) {
+							sucess = false;
+							System.err.println(e.getMessage());
+							continue;
+						}
+						
+						if(sucess){
+							System.out.println("Karte angelegt");
+						}else{
+							System.out.println("Fehler beim Anlegen der Karte");							
+						}
+					
+					
+					}else if(input.equals("2")){ //lösche Karte
+						
+						System.out.println("Kartennummer:");
+						String cardno = in.readLine();
+						
+						System.out.println("Gültig bis MM/YY:");
+						String validity = in.readLine();	
+						
+											
+						boolean sucess;
+						
+						try{
+							sucess = client.delete(cardno,validity);
+						}catch (APIException e) {
+							sucess = false;
+							System.err.println(e.getMessage());
+							continue;
+						}catch(JSONException e){
+							sucess = false;
+							System.err.println(e.getMessage());	
+							continue;
+						}
+						
+						if(sucess){
+							System.out.println("Karte angelegt");
+						}else{
+							System.out.println("Fehler beim Anlegen der Karte");							
+						}						
+						
+					}
+				}
+		
+		
+
+		System.exit(0);
+	}
+	
+	
+	private static void printMenu(){
+		
+		System.out.println("Kundenverwaltung");
+		System.out.println("Optionen:\n");		
+		System.out.println("\t1) Erstelle Karte");			
+		System.out.println("\t2) Lösche Karte");		
+		System.out.println("\t3) Beenden");
+		
+		System.out.println("\nAuswahl:");	
+		
+	}
+	
 	/**
 	 * Constructor.
 	 * Initialisiert die Basisklasse {@link CardClient#CardClient(String)} mit dem korrekten Keystore.

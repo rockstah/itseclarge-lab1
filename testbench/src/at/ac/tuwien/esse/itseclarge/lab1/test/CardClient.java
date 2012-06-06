@@ -1,6 +1,8 @@
 package at.ac.tuwien.esse.itseclarge.lab1.test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 
 import org.json.JSONException;
@@ -25,6 +27,9 @@ public abstract class CardClient {
 
 	private Client client;
 
+	
+	
+	
 	/**
 	 * Initialisiert den Client und den dazugehörigen Keystore.
 	 * 
